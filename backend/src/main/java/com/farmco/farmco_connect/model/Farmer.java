@@ -1,6 +1,11 @@
 package com.farmco.farmco_connect.model;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -26,7 +32,12 @@ public class Farmer {
 
     @ManyToOne
     @JoinColumn(name = "location_id")
+    @JsonIgnoreProperties({ "farmers", "users" })
     private Location location;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "farmers")
+    private Set<User> assignedUsers = new HashSet<>();
 
     public UUID getId() {
         return id;
@@ -67,5 +78,13 @@ public class Farmer {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Set<User> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public void setAssignedUsers(Set<User> assignedUsers) {
+        this.assignedUsers = assignedUsers;
     }
 }
