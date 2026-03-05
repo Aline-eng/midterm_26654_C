@@ -5,11 +5,17 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -20,16 +26,25 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false, unique = true)
     private String code;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "location")
-    private List<Farmer> farmers = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ELocationType type;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    @JsonIgnoreProperties({ "parent", "children" })
+    private Location parent;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "location")
-    private List<User> users = new ArrayList<>();
+    @OneToMany(mappedBy = "parent")
+    private List<Location> children = new ArrayList<>();
     
     public UUID getId() {
         return id;
@@ -55,19 +70,27 @@ public class Location {
         this.code = code;
     }
 
-    public List<Farmer> getFarmers() {
-        return farmers;
+    public ELocationType getType() {
+        return type;
     }
 
-    public void setFarmers(List<Farmer> farmers) {
-        this.farmers = farmers;
+    public void setType(ELocationType type) {
+        this.type = type;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public Location getParent() {
+        return parent;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setParent(Location parent) {
+        this.parent = parent;
+    }
+
+    public List<Location> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Location> children) {
+        this.children = children;
     }
 }

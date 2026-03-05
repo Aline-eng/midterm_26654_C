@@ -32,7 +32,7 @@ public class Farmer {
 
     @ManyToOne
     @JoinColumn(name = "location_id")
-    @JsonIgnoreProperties({ "farmers", "users" })
+    @JsonIgnoreProperties({ "parent", "children" })
     private Location location;
 
     @JsonIgnore

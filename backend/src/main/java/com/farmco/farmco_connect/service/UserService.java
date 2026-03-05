@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.farmco.farmco_connect.model.ELocationType;
 import com.farmco.farmco_connect.model.Farmer;
 import com.farmco.farmco_connect.model.Location;
 import com.farmco.farmco_connect.model.User;
@@ -44,6 +45,9 @@ public class UserService {
         Location location = locationRepository.findById(parsedLocationId).orElse(null);
         if (location == null) {
             return "Location not found";
+        }
+        if (location.getType() != ELocationType.PROVINCE) {
+            return "User location must be a PROVINCE";
         }
 
         user.setLocation(location);
