@@ -1,0 +1,705 @@
+{
+  "info": {
+    "_postman_id": "3e6d5e3c-c2cf-46a8-a8e1-5fbbf1f1f9a1",
+    "name": "Farmco Connect Practical Exam",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Save Province",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{provinceName}}\",\n  \"code\": \"{{provinceCode}}\",\n  \"type\": \"PROVINCE\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/save",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "save"
+          ]
+        }
+      }
+    },
+    {
+      "name": "02 - Get Provinces (capture provinceId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "const p = data.find(x => x.code === pm.environment.get(\"provinceCode\"));",
+              "if (p) { pm.environment.set(\"provinceId\", p.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/provinces",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "provinces"
+          ]
+        }
+      }
+    },
+    {
+      "name": "03 - Save District",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{districtName}}\",\n  \"code\": \"{{districtCode}}\",\n  \"type\": \"DISTRICT\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/save?parentId={{provinceId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "parentId",
+              "value": "{{provinceId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "04 - Get Districts (capture districtId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "const d = data.find(x => x.code === pm.environment.get(\"districtCode\"));",
+              "if (d) { pm.environment.set(\"districtId\", d.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/districts?provinceId={{provinceId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "districts"
+          ],
+          "query": [
+            {
+              "key": "provinceId",
+              "value": "{{provinceId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "05 - Save Sector",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{sectorName}}\",\n  \"code\": \"{{sectorCode}}\",\n  \"type\": \"SECTOR\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/save?parentId={{districtId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "parentId",
+              "value": "{{districtId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "06 - Get Sectors (capture sectorId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "const s = data.find(x => x.code === pm.environment.get(\"sectorCode\"));",
+              "if (s) { pm.environment.set(\"sectorId\", s.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/sectors?districtId={{districtId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "sectors"
+          ],
+          "query": [
+            {
+              "key": "districtId",
+              "value": "{{districtId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "07 - Save Cell",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{cellName}}\",\n  \"code\": \"{{cellCode}}\",\n  \"type\": \"CELL\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/save?parentId={{sectorId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "parentId",
+              "value": "{{sectorId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "08 - Get Cells (capture cellId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "const c = data.find(x => x.code === pm.environment.get(\"cellCode\"));",
+              "if (c) { pm.environment.set(\"cellId\", c.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/cells?sectorId={{sectorId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "cells"
+          ],
+          "query": [
+            {
+              "key": "sectorId",
+              "value": "{{sectorId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "09 - Save Village",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{villageName}}\",\n  \"code\": \"{{villageCode}}\",\n  \"type\": \"VILLAGE\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/save?parentId={{cellId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "parentId",
+              "value": "{{cellId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "10 - Get Villages (capture villageId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "const v = data.find(x => x.code === pm.environment.get(\"villageCode\"));",
+              "if (v) { pm.environment.set(\"villageId\", v.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/locations/villages?cellId={{cellId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "locations",
+            "villages"
+          ],
+          "query": [
+            {
+              "key": "cellId",
+              "value": "{{cellId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "11 - Save User (with Province)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"MANAGER\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/users/save?locationId={{provinceId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "locationId",
+              "value": "{{provinceId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "12 - Login User",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/users/login?username={{username}}&password={{password}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "login"
+          ],
+          "query": [
+            {
+              "key": "username",
+              "value": "{{username}}"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "13 - Save Farmer (with Village)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nationalId\": \"{{nationalId}}\",\n  \"name\": \"{{farmerName}}\",\n  \"phoneNumber\": \"{{farmerPhone}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/farmers/save?locationId={{villageId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "farmers",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "locationId",
+              "value": "{{villageId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "14 - Get Farmers All (capture farmerId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "const f = data.find(x => x.nationalId === pm.environment.get(\"nationalId\"));",
+              "if (f) { pm.environment.set(\"farmerId\", f.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/farmers/all",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "farmers",
+            "all"
+          ]
+        }
+      }
+    },
+    {
+      "name": "15 - Users by Province (capture userId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "const u = data.find(x => x.username === pm.environment.get(\"username\"));",
+              "if (u) { pm.environment.set(\"userId\", u.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/users/by-province?province={{provinceCode}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "by-province"
+          ],
+          "query": [
+            {
+              "key": "province",
+              "value": "{{provinceCode}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "16 - Assign Farmer to User",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/users/assign-farmer?userId={{userId}}&farmerId={{farmerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "assign-farmer"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{userId}}"
+            },
+            {
+              "key": "farmerId",
+              "value": "{{farmerId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "17 - Save Harvest",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cropType\": \"MAIZE\",\n  \"weight\": 120,\n  \"pricePerKg\": 350\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/harvests/save?farmerId={{farmerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "harvests",
+            "save"
+          ],
+          "query": [
+            {
+              "key": "farmerId",
+              "value": "{{farmerId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "18 - Get Harvest By Farmer (capture harvestId)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });",
+              "const data = pm.response.json();",
+              "if (Array.isArray(data) && data.length > 0) {",
+              "  pm.environment.set(\"harvestId\", data[0].id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/harvests/byFarmer?farmerId={{farmerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "harvests",
+            "byFarmer"
+          ],
+          "query": [
+            {
+              "key": "farmerId",
+              "value": "{{farmerId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "19 - Withdraw Payment",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "{{baseUrl}}/api/payments/withdraw?harvestId={{harvestId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "payments",
+            "withdraw"
+          ],
+          "query": [
+            {
+              "key": "harvestId",
+              "value": "{{harvestId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "20 - Farmers Paged + Sorted",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/farmers/paged?page=0&size=5&sortBy=name&direction=asc",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "farmers",
+            "paged"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "5"
+            },
+            {
+              "key": "sortBy",
+              "value": "name"
+            },
+            {
+              "key": "direction",
+              "value": "asc"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "21 - Users Paged + Sorted",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/users/paged?page=0&size=5&sortBy=username&direction=desc",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "paged"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "5"
+            },
+            {
+              "key": "sortBy",
+              "value": "username"
+            },
+            {
+              "key": "direction",
+              "value": "desc"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
