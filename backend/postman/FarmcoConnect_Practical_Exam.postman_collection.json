@@ -344,7 +344,7 @@
       }
     },
     {
-      "name": "11 - Save User (with Province)",
+      "name": "11 - Save User (with Village)",
       "request": {
         "method": "POST",
         "header": [
@@ -358,7 +358,7 @@
           "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"MANAGER\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/users/save?locationId={{provinceId}}",
+          "raw": "{{baseUrl}}/api/users/save?village={{villageCode}}",
           "host": [
             "{{baseUrl}}"
           ],
@@ -369,8 +369,8 @@
           ],
           "query": [
             {
-              "key": "locationId",
-              "value": "{{provinceId}}"
+              "key": "village",
+              "value": "{{villageCode}}"
             }
           ]
         }

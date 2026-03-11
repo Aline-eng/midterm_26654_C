@@ -25,8 +25,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> saveUser(@RequestBody User user, @RequestParam String locationId) {
-        String response = userService.saveUser(user, locationId);
+    public ResponseEntity<?> saveUser(@RequestBody User user, @RequestParam String village) {
+        String response = userService.saveUser(user, village);
 
         if (response.equals("User saved successfully")) {
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -51,6 +51,15 @@ public class UserController {
         List<User> users = userService.getUsersByProvince(province);
         if (users.isEmpty()) {
             return new ResponseEntity<>("No users found for this province", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/by-location", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUsersByLocation(@RequestParam String value) {
+        List<User> users = userService.getUsersByProvince(value);
+        if (users.isEmpty()) {
+            return new ResponseEntity<>("No users found for this location", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

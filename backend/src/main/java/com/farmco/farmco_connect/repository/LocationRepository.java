@@ -14,6 +14,10 @@ public interface LocationRepository extends JpaRepository<Location, UUID> {
 
     boolean existsByCodeIgnoreCase(String code);
 
+    Location findByTypeAndCodeIgnoreCase(ELocationType type, String code);
+
+    Location findByTypeAndNameIgnoreCase(ELocationType type, String name);
+
     List<Location> findByType(ELocationType type);
 
     List<Location> findByParentIdAndType(UUID parentId, ELocationType type);

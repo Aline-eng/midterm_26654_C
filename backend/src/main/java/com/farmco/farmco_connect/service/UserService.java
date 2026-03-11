@@ -35,22 +35,12 @@ public class UserService {
             return "Username already exists";
         }
 
-        UUID parsedLocationId;
-        try {
-            parsedLocationId = UUID.fromString(locationId);
-        } catch (IllegalArgumentException e) {
-            return "Invalid location id";
+        Location village = resolveVillage(locationId);
+        if (village == null) {
+            return "Village not found (use village id, code, or name)";
         }
 
-        Location location = locationRepository.findById(parsedLocationId).orElse(null);
-        if (location == null) {
-            return "Location not found";
-        }
-        if (location.getType() != ELocationType.PROVINCE) {
-            return "User location must be a PROVINCE";
-        }
-
-        user.setLocation(location);
+        user.setLocation(village);
         userRepository.save(user);
         return "User saved successfully";
     }
@@ -66,7 +56,7 @@ public class UserService {
     }
 
     public List<User> getUsersByProvince(String provinceValue) {
-        return userRepository.findByLocationCodeIgnoreCaseOrLocationNameIgnoreCase(provinceValue, provinceValue);
+        return userRepository.findByAnyLocationLevelCodeOrName(provinceValue);
     }
 
     public Page<User> getUsersPaginatedAndSorted(int page, int size, String sortBy, String direction) {
@@ -98,5 +88,33 @@ public class UserService {
         user.getFarmers().add(farmer);
         userRepository.save(user);
         return "Farmer assigned to user successfully";
+    }
+
+    private Location resolveVillage(String input) {
+        if (input == null || input.isBlank()) {
+            return null;
+        }
+
+        Location byCode = locationRepository.findByTypeAndCodeIgnoreCase(ELocationType.VILLAGE, input);
+        if (byCode != null) {
+            return byCode;
+        }
+
+        Location byName = locationRepository.findByTypeAndNameIgnoreCase(ELocationType.VILLAGE, input);
+        if (byName != null) {
+            return byName;
+        }
+
+        try {
+            UUID id = UUID.fromString(input);
+            Location byId = locationRepository.findById(id).orElse(null);
+            if (byId != null && byId.getType() == ELocationType.VILLAGE) {
+                return byId;
+            }
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
+        return null;
     }
 }
